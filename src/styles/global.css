@@ -147,7 +147,7 @@ p{text-wrap:pretty}
 .hero-stage::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);background-size:38px 38px;opacity:.6}
 .hero-ring{position:absolute;width:340px;height:340px;border-radius:50%;border:1px solid rgba(44,143,120,.25)}
 .hero-ring.r2{width:440px;height:440px;border-color:rgba(44,143,120,.13)}
-.hero-prod{position:relative;z-index:2;height:88%;max-height:430px;filter:drop-shadow(0 40px 50px rgba(28,49,42,.26))}
+.hero-prod{position:absolute;inset:7% 9%;z-index:2;filter:drop-shadow(0 40px 50px rgba(28,49,42,.26))}
 .hero-chip{position:absolute;z-index:3;background:#fff;border:1px solid var(--line);border-radius:3px;padding:11px 15px;box-shadow:var(--shadow-sm);font-size:13px}
 .hero-chip .ct{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:2px}
 .hero-chip .cv{font-weight:600;color:var(--ink);font-size:14px}
@@ -170,7 +170,7 @@ p{text-wrap:pretty}
 .hero-panel::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.2) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.2) 1px,transparent 1px);background-size:42px 42px;opacity:.55}
 .hero-panel .hero-ring{border-color:rgba(255,255,255,.45)}
 .hero-panel .hero-ring.r2{border-color:rgba(255,255,255,.26)}
-.hero-panel .hero-prod{height:90%;max-height:480px}
+.hero-panel .hero-prod{inset:6% 9%}
 .hero-imgcard{position:absolute;left:-30px;bottom:38px;width:178px;height:222px;border-radius:14px;z-index:4;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-md);padding:9px}
 .hero-imgcard image-slot{display:block;width:100%;height:100%;border-radius:9px;overflow:hidden}
 .imgcard-tag{position:absolute;bottom:18px;left:18px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(23,63,55,.78);padding:5px 9px;border-radius:3px;z-index:3}
@@ -280,7 +280,7 @@ p{text-wrap:pretty}
 .pcard-media.green{background:radial-gradient(120% 100% at 50% 18%, #f3faf8 0%, #dcefe9 68%, #cfe8e0 100%)}
 .pcard-media.blue{background:radial-gradient(120% 100% at 50% 18%, #f2f8fb 0%, #dde9f3 68%, #cfe0f0 100%)}
 .pcard-media::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);background-size:40px 40px;opacity:.5}
-.pcard-media img{position:relative;z-index:2;height:310px;max-height:330px;filter:drop-shadow(0 26px 34px rgba(28,49,42,.2))}
+.pcard-media .pcard-prod{position:absolute;inset:34px 30px;z-index:2;filter:drop-shadow(0 26px 34px rgba(28,49,42,.2))}
 .pcard-body{padding:30px 32px 34px;display:flex;flex-direction:column;flex:1}
 .pcard-body .product-kicker{margin-bottom:12px}
 .pcard-body h3{margin-bottom:10px}
@@ -500,3 +500,16 @@ p{text-wrap:pretty}
   .utility-l{gap:14px}
   .nav-cta .btn-ghost{display:none}
 }
+
+/* ============================================================
+   GatsbyImage integration (gatsby-plugin-image wrappers)
+   ============================================================ */
+/* Cover-fill photos: the wrapper should fill its aspect-ratio box. */
+.frame-portrait .gatsby-image-wrapper,
+.pd-main .gatsby-image-wrapper,
+.pd-thumb .gatsby-image-wrapper,
+.howto-media .gatsby-image-wrapper,
+.ing-photo .gatsby-image-wrapper{width:100%;height:100%;display:block}
+/* Clientele logos: contain within the padded box. */
+.clogo .gatsby-image-wrapper{max-width:100%;max-height:100%}
+.clogo .gatsby-image-wrapper img{object-fit:contain}
