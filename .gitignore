@@ -1,0 +1,18 @@
+# Gatsby / Node
+node_modules/
+.cache/
+public/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
