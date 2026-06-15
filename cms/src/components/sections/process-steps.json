@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_sections_process_steps",
+  "info": {
+    "displayName": "Process Steps",
+    "icon": "chartCircle"
+  },
+  "options": {},
+  "attributes": {
+    "tint": {
+      "type": "boolean",
+      "default": false
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.title-text"
+    }
+  }
+}

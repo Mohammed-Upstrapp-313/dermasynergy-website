@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_sections_hero",
+  "info": {
+    "displayName": "Hero / Banner",
+    "icon": "bulb"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "cta_label": {
+      "type": "string"
+    },
+    "cta_url": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "meta": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stat"
+    }
+  }
+}

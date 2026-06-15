@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_sections_rule_list",
+  "info": {
+    "displayName": "Approach / Rule List",
+    "icon": "search"
+  },
+  "options": {},
+  "attributes": {
+    "tint": {
+      "type": "boolean",
+      "default": false
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "link_label": {
+      "type": "string"
+    },
+    "link_url": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.icon-title-text"
+    }
+  }
+}

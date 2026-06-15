@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_title_text",
+  "info": {
+    "displayName": "Title + Text",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "text": {
+      "type": "text"
+    }
+  }
+}

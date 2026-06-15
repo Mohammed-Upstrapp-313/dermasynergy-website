@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_sections_clientele",
+  "info": {
+    "displayName": "Clientele Logos",
+    "icon": "picture"
+  },
+  "options": {},
+  "attributes": {
+    "tint": {
+      "type": "boolean",
+      "default": false
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "logos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.logo"
+    }
+  }
+}

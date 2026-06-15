@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_contact_point",
+  "info": {
+    "displayName": "Contact point",
+    "icon": "envelop"
+  },
+  "options": {},
+  "attributes": {
+    "icon": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_sections_trust_strip",
+  "info": {
+    "displayName": "Trust Strip",
+    "icon": "shield"
+  },
+  "options": {},
+  "attributes": {
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.icon-text"
+    }
+  }
+}

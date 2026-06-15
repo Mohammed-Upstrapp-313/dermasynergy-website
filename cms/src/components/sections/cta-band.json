@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_sections_cta_band",
+  "info": {
+    "displayName": "CTA Band",
+    "icon": "rocket"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "body": {
+      "type": "text"
+    },
+    "cta_label": {
+      "type": "string"
+    },
+    "cta_url": {
+      "type": "string"
+    }
+  }
+}

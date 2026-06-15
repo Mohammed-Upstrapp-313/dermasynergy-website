@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_menu_item",
+  "info": {
+    "displayName": "Menu item",
+    "icon": "link"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
+  }
+}

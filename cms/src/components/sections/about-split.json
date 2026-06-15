@@ -1,0 +1,42 @@
+{
+  "collectionName": "components_sections_about_split",
+  "info": {
+    "displayName": "About (Image + Text)",
+    "icon": "user"
+  },
+  "options": {},
+  "attributes": {
+    "tint": {
+      "type": "boolean",
+      "default": false
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "image_side": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "right"
+      ],
+      "default": "left"
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "body": {
+      "type": "text"
+    }
+  }
+}

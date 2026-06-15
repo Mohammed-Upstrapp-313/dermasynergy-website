@@ -1,0 +1,71 @@
+{
+  "kind": "singleType",
+  "collectionName": "globals",
+  "info": {
+    "singularName": "global",
+    "pluralName": "globals",
+    "displayName": "Global",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "site_name": {
+      "type": "string",
+      "default": "DermaSynergy"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "footer_about": {
+      "type": "text"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "contact_office": {
+      "type": "string"
+    },
+    "social_instagram": {
+      "type": "string"
+    },
+    "social_linkedin": {
+      "type": "string"
+    },
+    "social_facebook": {
+      "type": "string"
+    },
+    "social_youtube": {
+      "type": "string"
+    },
+    "color_mint": {
+      "type": "string"
+    },
+    "color_teal": {
+      "type": "string"
+    },
+    "color_ink": {
+      "type": "string"
+    },
+    "header_menu": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.menu-item"
+    },
+    "footer_menu": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.menu-item"
+    }
+  }
+}

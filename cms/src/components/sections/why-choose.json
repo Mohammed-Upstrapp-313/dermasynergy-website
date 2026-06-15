@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_sections_why_choose",
+  "info": {
+    "displayName": "Why Choose (icon grid)",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "tint": {
+      "type": "boolean",
+      "default": false
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.icon-title"
+    }
+  }
+}

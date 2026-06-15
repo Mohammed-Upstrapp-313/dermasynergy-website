@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_sections_contact_block",
+  "info": {
+    "displayName": "Contact Block",
+    "icon": "envelop"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "form_note": {
+      "type": "string"
+    },
+    "points": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.contact-point"
+    }
+  }
+}

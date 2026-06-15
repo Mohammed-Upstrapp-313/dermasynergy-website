@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_sections_mission_vision",
+  "info": {
+    "displayName": "Mission & Vision",
+    "icon": "eye"
+  },
+  "options": {},
+  "attributes": {
+    "tint": {
+      "type": "boolean",
+      "default": false
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "cards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.icon-title-text"
+    }
+  }
+}

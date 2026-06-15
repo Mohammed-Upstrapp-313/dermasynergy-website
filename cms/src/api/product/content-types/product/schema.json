@@ -1,0 +1,95 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "kicker": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "short_desc": {
+      "type": "text"
+    },
+    "description": {
+      "type": "text"
+    },
+    "main_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "tags": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.list-item"
+    },
+    "specs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stat"
+    },
+    "benefits": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.icon-text"
+    },
+    "how_to_use": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.title-text"
+    },
+    "ingredients": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.list-item"
+    },
+    "accent": {
+      "type": "enumeration",
+      "enum": [
+        "green",
+        "blue"
+      ],
+      "default": "green"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": true
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

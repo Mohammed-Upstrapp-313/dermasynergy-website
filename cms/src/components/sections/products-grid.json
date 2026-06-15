@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_sections_products_grid",
+  "info": {
+    "displayName": "Products Grid",
+    "icon": "cube"
+  },
+  "options": {},
+  "attributes": {
+    "tint": {
+      "type": "boolean",
+      "default": false
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "lede": {
+      "type": "text"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "featured",
+        "all"
+      ],
+      "default": "featured"
+    }
+  }
+}

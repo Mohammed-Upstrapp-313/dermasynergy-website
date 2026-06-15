@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_sections_page_banner",
+  "info": {
+    "displayName": "Page Banner",
+    "icon": "layout"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "breadcrumb": {
+      "type": "string"
+    }
+  }
+}
