@@ -1,0 +1,19 @@
+# Netlify configuration for the DermaSynergy Gatsby site
+# Works for both CLI deploys (`netlify deploy`) and git-connected builds.
+
+[build]
+  command = "npm run build"
+  publish = "public"
+
+[build.environment]
+  # Pin a Gatsby-supported LTS Node so Netlify builds match local.
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--no-audit --no-fund"
+
+# Long-cache the fingerprinted Gatsby assets.
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Gatsby emits 404.html; Netlify serves it automatically for unknown routes.
