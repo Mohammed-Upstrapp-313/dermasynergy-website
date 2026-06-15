@@ -38,5 +38,12 @@ module.exports = {
         strapi.log.info(`[bootstrap] enabled public permission: ${action}`);
       }
     }
+
+    // Seed content (mirrors the PHP CMS seeder). Idempotent.
+    try {
+      await require('./seed')(strapi);
+    } catch (e) {
+      strapi.log.error('[seed] failed: ' + (e.stack || e.message));
+    }
   },
 };
