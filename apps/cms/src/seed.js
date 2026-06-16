@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const IMAGES_DIR = path.join(__dirname, '..', '..', 'src', 'images');
+const IMAGES_DIR = path.join(__dirname, '..', '..', 'web', 'src', 'images');
 const mimeOf = (f) =>
   f.endsWith('.png') ? 'image/png' : /\.jpe?g$/.test(f) ? 'image/jpeg' : f.endsWith('.webp') ? 'image/webp' : 'application/octet-stream';
 
