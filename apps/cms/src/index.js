@@ -39,26 +39,28 @@ module.exports = {
       }
     }
 
-    // Seed content (mirrors the PHP CMS seeder). Idempotent.
-    try {
-      await require('./seed')(strapi);
-    } catch (e) {
-      strapi.log.error('[seed] failed: ' + (e.stack || e.message));
-    }
-
-    // Ensure og_image is set (PHP parity): pages -> logo, products -> main image. Idempotent.
-    try {
-      await patchOgImage(strapi);
-    } catch (e) {
-      strapi.log.error('[patch] ogImage failed: ' + (e.stack || e.message));
-    }
-
-    // Ensure Global.favicon is set (defaults to the main logo). Idempotent.
-    try {
-      await patchFavicon(strapi);
-    } catch (e) {
-      strapi.log.error('[patch] favicon failed: ' + (e.stack || e.message));
-    }
+    // Seed + content patches run in the BACKGROUND (not awaited) so the HTTP
+    // server binds its port immediately. Required on Render free tier: the seed
+    // uploads images to Cloudinary on first boot, which otherwise blocks startup
+    // long enough for Render's port scan to time out (deploy fails: "no open ports").
+    // Idempotent — only does real work on a fresh database.
+    (async () => {
+      try {
+        await require('./seed')(strapi);
+      } catch (e) {
+        strapi.log.error('[seed] failed: ' + (e.stack || e.message));
+      }
+      try {
+        await patchOgImage(strapi);
+      } catch (e) {
+        strapi.log.error('[patch] ogImage failed: ' + (e.stack || e.message));
+      }
+      try {
+        await patchFavicon(strapi);
+      } catch (e) {
+        strapi.log.error('[patch] favicon failed: ' + (e.stack || e.message));
+      }
+    })();
 
     // Ensure a read-only API token for the Gatsby frontend (logged once on creation).
     try {
