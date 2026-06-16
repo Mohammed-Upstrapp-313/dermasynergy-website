@@ -49,7 +49,7 @@ const ProductTemplate = ({ data }) => {
       {p.benefits && p.benefits.length > 0 && (
         <section className="section-pad tint">
           <div className="wrap">
-            <div className="section-head reveal" style={{ maxWidth: "none", display: "grid", gridTemplateColumns: "1.25fr .75fr", alignItems: "end", gap: "40px" }}>
+            <div className="section-head wide cols reveal">
               <div>
                 <span className="eyebrow" style={{ marginBottom: "18px" }}>Key Benefits</span>
                 <h2 className="h2" style={{ maxWidth: "18ch" }}>What {p.name} does for the skin.</h2>

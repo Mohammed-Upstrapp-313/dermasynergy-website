@@ -33,7 +33,7 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip}
 body{
   font-family:var(--sans);
   color:var(--ink-2);
@@ -42,6 +42,7 @@ body{
   line-height:1.6;
   font-size:17px;
   overflow-x:hidden;
+  overflow-x:clip;
 }
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
@@ -176,7 +177,7 @@ p{text-wrap:pretty}
 .imgcard-tag{position:absolute;bottom:18px;left:18px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(23,63,55,.78);padding:5px 9px;border-radius:3px;z-index:3}
 .hero-chip.c2{top:34px;right:-20px;bottom:auto}
 .trust-strip{border-bottom:1px solid var(--line-soft);background:#fff}
-.trust-strip .wrap{display:flex;align-items:center;gap:clamp(24px,5vw,60px);height:84px;flex-wrap:wrap;justify-content:space-between}
+.trust-strip .wrap{display:flex;align-items:center;gap:clamp(24px,5vw,60px);min-height:84px;padding-block:14px;flex-wrap:wrap;justify-content:space-between}
 .trust-item{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--ink-soft);font-weight:500}
 .trust-item .ic{width:20px;height:20px;color:var(--teal);flex:none}
 
@@ -498,7 +499,11 @@ p{text-wrap:pretty}
   .benefits{grid-template-columns:1fr}
   .footer-top{grid-template-columns:1fr}
   .utility-l{gap:14px}
-  .nav-cta .btn-ghost{display:none}
+  /* keep the Menu toggle visible on phones; hide the CTA button to save space */
+  .nav-cta .btn-primary{display:none}
+  /* make the nav fit on small phones so the Menu button isn't clipped */
+  .nav-inner{gap:14px}
+  .brand-name{font-size:20px}
 }
 
 /* ============================================================
@@ -513,3 +518,25 @@ p{text-wrap:pretty}
 /* Clientele logos: contain within the padded box. */
 .clogo .gatsby-image-wrapper{max-width:100%;max-height:100%}
 .clogo .gatsby-image-wrapper img{object-fit:contain}
+
+/* ============================================================
+   Responsive section headers (used instead of inline grid/flex,
+   so they collapse to one column on small screens)
+   ============================================================ */
+.section-head.wide{max-width:none}
+.section-head.row{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
+.section-head.cols{display:grid;grid-template-columns:1.25fr .75fr;align-items:end;gap:40px}
+.section-head.row > div,.section-head.cols > div{min-width:0}
+@media (max-width:820px){
+  .section-head.cols{grid-template-columns:1fr;gap:16px}
+  .section-head.row{flex-direction:column;align-items:flex-start;gap:16px}
+  .section-head.row h2,.section-head.cols h2{max-width:none}
+}
+
+/* Approach / rule-list: sticky heading on desktop, static on mobile (was inline
+   position:sticky which overlapped the stacked content on small screens). */
+.rule-split{align-items:start}
+.rule-aside{position:sticky;top:110px}
+@media (max-width:920px){
+  .rule-aside{position:static;top:auto}
+}

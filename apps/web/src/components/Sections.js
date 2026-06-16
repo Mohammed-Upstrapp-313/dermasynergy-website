@@ -68,7 +68,7 @@ const AboutSplit = (s) => (
 );
 
 const sectionHeadSplit = (s) => (
-  <div className="section-head reveal" style={{ maxWidth: "none", display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "30px", flexWrap: "wrap" }}>
+  <div className="section-head wide row reveal">
     <div>
       {s.eyebrow && <span className="eyebrow" style={{ marginBottom: "18px" }}>{s.eyebrow}</span>}
       {s.heading && <h2 className="h2" style={{ maxWidth: "16ch" }}>{s.heading}</h2>}
@@ -77,7 +77,7 @@ const sectionHeadSplit = (s) => (
   </div>
 );
 const sectionHeadGrid = (s) => (
-  <div className="section-head reveal" style={{ maxWidth: "none", display: "grid", gridTemplateColumns: "1.25fr .75fr", alignItems: "end", gap: "40px" }}>
+  <div className="section-head wide cols reveal">
     <div>
       {s.eyebrow && <span className="eyebrow" style={{ marginBottom: "18px" }}>{s.eyebrow}</span>}
       {s.heading && <h2 className="h2" style={{ maxWidth: "18ch" }}>{s.heading}</h2>}
@@ -107,8 +107,8 @@ const FeatureRow = (s) => (
 
 const RuleList = (s) => (
   <section className={tintClass(s.tint)}>
-    <div className="wrap split narrow-r" style={{ alignItems: "start" }}>
-      <div className="reveal stack-gap" style={{ position: "sticky", top: "110px" }}>
+    <div className="wrap split narrow-r rule-split">
+      <div className="reveal stack-gap rule-aside">
         {s.eyebrow && <span className="eyebrow">{s.eyebrow}</span>}
         {s.heading && <h2 className="h2">{s.heading}</h2>}
         {s.lede && <p className="lede">{s.lede}</p>}
