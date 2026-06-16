@@ -6,9 +6,10 @@ import { useStaticQuery, graphql } from "gatsby";
  * (per-page/product seo component) with siteMetadata fallbacks.
  */
 const Seo = ({ title, description, image, keywords, pathname }) => {
-  const { site } = useStaticQuery(graphql`
+  const { site, strapiGlobal } = useStaticQuery(graphql`
     query {
       site { siteMetadata { title description siteUrl } }
+      strapiGlobal { favicon { localFile { publicURL } } }
     }
   `);
 
@@ -17,10 +18,12 @@ const Seo = ({ title, description, image, keywords, pathname }) => {
   const desc = description || defaultDesc;
   const canonical = `${siteUrl}${pathname || "/"}`;
   const ogImage = image ? (image.startsWith("http") ? image : `${siteUrl}${image}`) : null;
+  const favicon = strapiGlobal && strapiGlobal.favicon && strapiGlobal.favicon.localFile && strapiGlobal.favicon.localFile.publicURL;
 
   return (
     <>
       <title>{fullTitle}</title>
+      {favicon && <link rel="icon" href={favicon} />}
       <meta name="description" content={desc} />
       {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={canonical} />

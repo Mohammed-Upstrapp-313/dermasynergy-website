@@ -24,6 +24,14 @@
         "images"
       ]
     },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
     "footer_about": {
       "type": "text"
     },
@@ -46,15 +54,6 @@
       "type": "string"
     },
     "social_youtube": {
-      "type": "string"
-    },
-    "color_mint": {
-      "type": "string"
-    },
-    "color_teal": {
-      "type": "string"
-    },
-    "color_ink": {
       "type": "string"
     },
     "header_menu": {

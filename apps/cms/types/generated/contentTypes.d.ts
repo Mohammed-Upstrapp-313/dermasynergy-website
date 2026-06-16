@@ -486,15 +486,13 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    color_ink: Schema.Attribute.String;
-    color_mint: Schema.Attribute.String;
-    color_teal: Schema.Attribute.String;
     contact_email: Schema.Attribute.String;
     contact_office: Schema.Attribute.String;
     contact_phone: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    favicon: Schema.Attribute.Media<'images'>;
     footer_about: Schema.Attribute.Text;
     footer_menu: Schema.Attribute.Component<'shared.menu-item', true>;
     header_menu: Schema.Attribute.Component<'shared.menu-item', true>;

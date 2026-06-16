@@ -49,18 +49,16 @@ async function seed(strapi) {
   await createDoc('api::global.global', {
     site_name: 'DermaSynergy',
     logo: await upload('/assets/main-logo.png', 'DermaSynergy'),
+    favicon: await upload('/assets/main-logo.png', 'DermaSynergy favicon'),
     footer_about:
       'Dermatology-grade skincare developed for clinics and healthcare professionals — effective, well-made formulations backed by reliable supply.',
     contact_email: 'partners@dermasynergy.com',
     contact_phone: '+91 22 4567 8900',
     contact_office: 'Andheri East, Mumbai 400 069',
-    social_instagram: '',
-    social_linkedin: '',
-    social_facebook: '',
-    social_youtube: '',
-    color_mint: '#64ccad',
-    color_teal: '#1c5f51',
-    color_ink: '#313c45',
+    social_instagram: 'https://www.instagram.com/dermasynergy',
+    social_linkedin: 'https://www.linkedin.com/company/dermasynergy',
+    social_facebook: 'https://www.facebook.com/dermasynergy',
+    social_youtube: 'https://www.youtube.com/@dermasynergy',
     header_menu: [
       { label: 'About', url: '/about/' },
       { label: 'Rebalanse Cleanser', url: '/products/rebalanse/' },

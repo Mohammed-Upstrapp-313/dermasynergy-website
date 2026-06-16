@@ -50,7 +50,7 @@ const strapiConfig = {
   singleTypes: [
     {
       singularName: "global",
-      queryParams: { populate: { logo: true, header_menu: true, footer_menu: true } },
+      queryParams: { populate: { logo: true, favicon: true, header_menu: true, footer_menu: true } },
     },
   ],
 };
