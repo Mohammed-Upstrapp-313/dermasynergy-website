@@ -53,6 +53,13 @@ module.exports = {
       strapi.log.error('[patch] ogImage failed: ' + (e.stack || e.message));
     }
 
+    // Ensure Global.favicon is set (defaults to the main logo). Idempotent.
+    try {
+      await patchFavicon(strapi);
+    } catch (e) {
+      strapi.log.error('[patch] favicon failed: ' + (e.stack || e.message));
+    }
+
     // Ensure a read-only API token for the Gatsby frontend (logged once on creation).
     try {
       const svc = strapi.service('admin::api-token');
@@ -133,7 +140,29 @@ async function setImageFieldHints(strapi) {
     main_image: 'Product render (card/hero). Recommended ~1000×1200px PNG, transparent background.',
     gallery: 'Gallery photos, ~1200×1500px (4:5) each. The first image is the main display.',
   });
-  await apply('ct', 'api::global.global', { logo: 'Brand logo. Recommended ~400×120px PNG, transparent background.' });
+  await apply('ct', 'api::global.global', {
+    logo: 'Brand logo. Recommended ~400×120px PNG, transparent background.',
+    favicon: 'Browser tab icon. Recommended a square PNG, ~512×512px (min 48×48).',
+    social_instagram: 'Full Instagram URL. Leave empty to hide the Instagram icon.',
+    social_linkedin: 'Full LinkedIn URL. Leave empty to hide the LinkedIn icon.',
+    social_facebook: 'Full Facebook URL. Leave empty to hide the Facebook icon.',
+    social_youtube: 'Full YouTube URL. Leave empty to hide the YouTube icon.',
+  });
+}
+
+async function patchFavicon(strapi) {
+  const g = await strapi.documents('api::global.global').findFirst({ populate: { favicon: true } });
+  if (!g || g.favicon) return;
+  const logo = await strapi.db
+    .query('plugin::upload.file')
+    .findMany({ where: { name: { $contains: 'main-logo' } }, limit: 1 });
+  if (logo[0]) {
+    await strapi.documents('api::global.global').update({
+      documentId: g.documentId,
+      data: { favicon: logo[0].id },
+    });
+    strapi.log.info('[patch] set Global favicon -> main-logo');
+  }
 }
 
 async function patchOgImage(strapi) {
