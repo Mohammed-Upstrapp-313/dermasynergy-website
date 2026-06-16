@@ -1,0 +1,10 @@
+# Gatsby build artifacts
+.cache/
+public/
+
+# Dependencies (in case of a non-hoisted install)
+node_modules/
+
+# Env
+.env
+.env.*

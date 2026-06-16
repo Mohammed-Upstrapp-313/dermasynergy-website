@@ -1,62 +1,84 @@
-# DermaSynergy — Website (Gatsby + React)
+# DermaSynergy — Monorepo
 
-B2B marketing site for DermaSynergy dermatology skincare, built with **Gatsby 5** and **React 18**.
+B2B marketing site for DermaSynergy dermatology skincare, organized as a **Turborepo**
+monorepo: a **Gatsby 5** frontend driven by content from a **Strapi 5** CMS.
+
+## Structure
+
+```
+.
+├── apps/
+│   ├── web/        Gatsby 5 + React 18 frontend (sources content from Strapi)
+│   └── cms/        Strapi 5 CMS (content + media, MySQL)
+├── legacy/         Original static HTML/CSS design (kept for reference)
+├── turbo.json      Turborepo task pipeline
+└── package.json    npm workspaces + root scripts
+```
+
+Workspaces: `@dermasynergy/web`, `@dermasynergy/cms`.
 
 ## Quick start
 
 ```bash
-npm install        # install dependencies
-npm run develop    # start dev server at http://localhost:8000
+npm install                 # install ALL workspaces (run once at the repo root)
 ```
 
-Other scripts:
+The web app reads from Strapi at build/develop time, so start the CMS first:
 
 ```bash
-npm run build      # production build -> ./public
-npm run serve      # serve the production build locally
-npm run clean      # clear Gatsby cache (.cache + public)
+npm run cms                 # Strapi admin at http://localhost:1337/admin
+npm run web                 # Gatsby dev server at http://localhost:8000
 ```
 
-> Requires Node.js 18+ (developed on Node 24).
+Or drive everything through Turbo from the root:
 
-## Project structure
-
-```
-src/
-  components/      Shared UI
-    Layout.js        Header + Footer shell + reveal-on-scroll observer
-    Header.js        Top navigation (with mobile toggle)
-    Footer.js        Footer with links + socials
-    Seo.js           <title>/meta via Gatsby Head API
-    Gallery.js       Product image gallery (main + thumbnails)
-  pages/           File-based routes
-    index.js         /                 Homepage
-    about.js         /about/           About Us
-    contact.js       /contact/         Contact + enquiry form
-    privacy.js       /privacy/         Privacy policy (placeholder)
-    terms.js         /terms/           Terms of use (placeholder)
-    404.js           404 page
-    products/
-      rebalanse.js   /products/rebalanse/
-      revivon.js     /products/revivon/
-  styles/
-    global.css       All shared styles (design tokens in :root)
-static/
-  assets/          Product photography, client logos, lab imagery (served at /assets/...)
-  favicon.png
-legacy/            Original static HTML site (archived for reference)
+```bash
+npm run develop             # turbo run develop — starts every app
+npm run build               # turbo run build  — builds every app (cached)
+npm run clean               # turbo run clean
 ```
 
-## Notes
+Per-app helpers: `npm run web` / `npm run web:build`, `npm run cms` / `npm run cms:build`.
+You can also target a workspace directly: `npm run <script> --workspace=@dermasynergy/web`.
 
-- **Styling** is the original global `styles.css` (now `src/styles/global.css`), imported in `gatsby-browser.js`. Design tokens live in `:root` at the top.
-- **Images** are served statically from `static/assets/` and referenced as `/assets/<file>.png`.
-- **Fonts** (Newsreader, Hanken Grotesk, IBM Plex Mono) are loaded via Google Fonts `@import` inside `global.css` — needs internet to render correctly.
-- **Contact form** (`src/pages/contact.js`) is front-end only — it validates and shows a success message but does not yet submit anywhere. Wire it to a backend/email service (or the upcoming admin panel/API).
-- **Privacy & Terms** pages are placeholders pending final legal text.
-- The **admin panel / CMS** will be added later; this repo is the frontend.
+> Requires Node.js 20+ (Strapi pins `>=20 <=24.x`; developed on Node 24).
+
+## Configuration
+
+The web app connects to Strapi via env vars (create `apps/web/.env.development`):
+
+```
+STRAPI_API_URL=http://localhost:1337
+STRAPI_TOKEN=<a Strapi read-only API token>
+```
+
+The CMS needs a MySQL connection + secrets in `apps/cms/.env` — see `apps/cms/README.md`
+and `apps/cms/config/`.
+
+## apps/web (Gatsby frontend)
+
+- Pages and products are created from Strapi content in `gatsby-node.js`
+  (`/` + `/{slug}/` from Pages, `/products/{slug}/` from Products), rendered by
+  `src/templates/page.js` and `src/templates/product.js`.
+- Sections are a Strapi dynamic zone mapped to React in `src/components/Sections.js`.
+- `src/components/Seo.js` builds `<title>`/meta via the Gatsby Head API, with values
+  synced from each entry's Strapi `seo` component (siteMetadata fallbacks).
+- Image pipeline: `gatsby-plugin-image` + `gatsby-plugin-sharp` (responsive srcset,
+  AVIF/WebP, lazy-load, blur-up). Strapi media flows through the same pipeline.
+
+## apps/cms (Strapi 5)
+
+Standard Strapi app — see `apps/cms/README.md`. Common scripts: `develop`, `build`,
+`start`. Content model mirrors the legacy PHP CMS.
+
+## legacy/
+
+The original hand-built static HTML/CSS site (homepage, about, contact, two product
+pages). Kept as the visual reference the Gatsby frontend mirrors. Not a workspace.
 
 ## Deployment
 
-`npm run build` outputs a static site to `public/`, deployable to any static host
-(Netlify, Vercel, Cloudflare Pages, Bitbucket Pipelines + hosting, etc.).
+`netlify.toml` installs the whole workspace at the repo root, then builds only the web
+app via `npx turbo run build --filter=@dermasynergy/web` and publishes
+`apps/web/public`. The build needs a reachable Strapi (`STRAPI_API_URL` + `STRAPI_TOKEN`
+in the Netlify environment). The CMS is deployed separately (e.g. Strapi Cloud).

@@ -1,8 +1,8 @@
 {
-  "name": "cms",
+  "name": "@dermasynergy/cms",
   "version": "0.1.0",
   "private": true,
-  "description": "A Strapi application",
+  "description": "DermaSynergy — Strapi 5 CMS (content source for the web app)",
   "scripts": {
     "build": "strapi build",
     "console": "strapi console",
