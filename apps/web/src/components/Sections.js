@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { Link, useStaticQuery, graphql } from "gatsby";
+import emailjs from "@emailjs/browser";
 import Icon from "./Icon";
 import StrapiImage from "./StrapiImage";
 
 const STRAPI_URL = process.env.GATSBY_STRAPI_API_URL || "http://localhost:1337";
+
+// EmailJS (https://www.emailjs.com) — sends the contact form as an email, client-side.
+const EMAILJS_SERVICE = process.env.GATSBY_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE = process.env.GATSBY_EMAILJS_TEMPLATE_ID;
+const EMAILJS_KEY = process.env.GATSBY_EMAILJS_PUBLIC_KEY;
 
 /* helpers ----------------------------------------------------------------- */
 const highlight = (text) => {
@@ -254,6 +260,8 @@ const ContactBlock = (s) => {
   const [v, setV] = useState({ name: "", phone: "", email: "", company: "", message: "" });
   const [err, setErr] = useState({});
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
   const upd = (e) => setV((o) => ({ ...o, [e.target.name]: e.target.value }));
   const submit = async (e) => {
     e.preventDefault();
@@ -262,15 +270,34 @@ const ContactBlock = (s) => {
     if (v.email.trim() && !emailOk(v.email)) next.email = true;
     setErr(next);
     if (Object.keys(next).length) return;
+
+    setSending(true);
+    setFailed(false);
     try {
-      await fetch(`${STRAPI_URL}/api/enquiries`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
+      // Primary: send the enquiry as an email via EmailJS (client-side, no backend needed).
+      if (EMAILJS_SERVICE && EMAILJS_TEMPLATE && EMAILJS_KEY) {
+        await emailjs.send(
+          EMAILJS_SERVICE,
+          EMAILJS_TEMPLATE,
+          { name: v.name, phone: v.phone, email: v.email, company: v.company, message: v.message },
+          { publicKey: EMAILJS_KEY }
+        );
+      }
+      // Best-effort: also log the enquiry in the Strapi admin (never blocks success).
+      fetch(`${STRAPI_URL}/api/enquiries`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ data: v }),
-      });
+      }).catch(() => {});
+
       setSent(true);
       setV({ name: "", phone: "", email: "", company: "", message: "" });
       setTimeout(() => setSent(false), 6000);
-    } catch (_) { setSent(true); }
+    } catch (_) {
+      setFailed(true);
+    } finally {
+      setSending(false);
+    }
   };
   const es = (k) => (err[k] ? { borderColor: "#d98b8b" } : undefined);
   return (
@@ -294,13 +321,20 @@ const ContactBlock = (s) => {
             <div className="field"><label htmlFor="f-company">Company Name</label><input id="f-company" name="company" type="text" placeholder="Clinic / pharmacy name" value={v.company} onChange={upd} /></div>
             <div className="field full"><label htmlFor="f-message">Message <span className="req">*</span></label><textarea id="f-message" name="message" placeholder="How can we help your practice?" value={v.message} onChange={upd} style={es("message")}></textarea></div>
             <div className="form-actions">
-              <button type="submit" className="btn btn-primary btn-lg">Send <Arrow /></button>
+              <button type="submit" className="btn btn-primary btn-lg" disabled={sending}>
+                {sending ? "Sending…" : <>Send <Arrow /></>}
+              </button>
               {s.form_note && <span className="form-note">{s.form_note}</span>}
             </div>
             <div className={`form-ok${sent ? " show" : ""}`}>
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M8 12l3 3 5-6" /></svg>
-              Thanks — your message has been noted. We'll be in touch shortly.
+              Thanks — your message has been sent. We'll be in touch shortly.
             </div>
+            {failed && (
+              <div className="form-err" style={{ gridColumn: "1 / -1", color: "#c0564f", fontSize: "14.5px", fontWeight: 600 }}>
+                Sorry, something went wrong sending your message. Please try again or email us directly.
+              </div>
+            )}
           </form>
         </div>
       </div>
