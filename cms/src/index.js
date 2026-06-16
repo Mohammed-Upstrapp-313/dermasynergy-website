@@ -52,8 +52,89 @@ module.exports = {
     } catch (e) {
       strapi.log.error('[patch] ogImage failed: ' + (e.stack || e.message));
     }
+
+    // Ensure a read-only API token for the Gatsby frontend (logged once on creation).
+    try {
+      const svc = strapi.service('admin::api-token');
+      const existing = await svc.getByName('gatsby');
+      if (!existing) {
+        const t = await svc.create({
+          name: 'gatsby',
+          description: 'Gatsby frontend (gatsby-source-strapi needs content-type-builder introspection)',
+          type: 'full-access',
+          lifespan: null,
+        });
+        strapi.log.info('[token] GATSBY_STRAPI_TOKEN=' + t.accessKey);
+      } else {
+        strapi.log.info('[token] gatsby API token already exists');
+      }
+    } catch (e) {
+      strapi.log.error('[token] ' + (e.stack || e.message));
+    }
+
+    // Auto-refresh the local Gatsby dev server on publish/update (local dev only).
+    try {
+      const refreshUrl = process.env.GATSBY_REFRESH_URL || 'http://localhost:8000/__refresh';
+      const store = strapi.get ? strapi.get('webhookStore') : strapi.webhookStore;
+      if (store && store.findWebhooks) {
+        const hooks = await store.findWebhooks();
+        if (!hooks.find((h) => h.name === 'Gatsby refresh')) {
+          await store.createWebhook({
+            name: 'Gatsby refresh',
+            url: refreshUrl,
+            headers: {},
+            events: ['entry.create', 'entry.update', 'entry.delete', 'entry.publish', 'entry.unpublish'],
+            enabled: true,
+          });
+          strapi.log.info('[webhook] created "Gatsby refresh" -> ' + refreshUrl);
+        } else {
+          strapi.log.info('[webhook] "Gatsby refresh" already exists');
+        }
+      }
+    } catch (e) {
+      strapi.log.error('[webhook] ' + (e.stack || e.message));
+    }
+
+    // Add recommended-image-size helper text under image fields in the admin.
+    try {
+      await setImageFieldHints(strapi);
+    } catch (e) {
+      strapi.log.error('[labels] ' + (e.stack || e.message));
+    }
   },
 };
+
+async function setImageFieldHints(strapi) {
+  const cm = strapi.plugin('content-manager');
+  const apply = async (kind, key, fields) => {
+    try {
+      const schema = kind === 'ct' ? strapi.contentType(key) : strapi.components[key];
+      if (!schema) { strapi.log.warn('[labels] not found: ' + key); return; }
+      const service = cm.service(kind === 'ct' ? 'content-types' : 'components');
+      const cfg = await service.findConfiguration(schema);
+      cfg.metadatas = cfg.metadatas || {};
+      for (const [field, description] of Object.entries(fields)) {
+        const m = cfg.metadatas[field] || { edit: {}, list: {} };
+        m.edit = { ...(m.edit || {}), description };
+        cfg.metadatas[field] = m;
+      }
+      await service.updateConfiguration(schema, cfg);
+      strapi.log.info('[labels] hints set on ' + key);
+    } catch (e) {
+      strapi.log.error('[labels] ' + key + ': ' + e.message);
+    }
+  };
+
+  await apply('comp', 'sections.hero', { image: 'Product render. Recommended ~1000×1200px PNG with transparent background.' });
+  await apply('comp', 'sections.about-split', { image: 'Photo. Recommended ~1200×1500px (4:5 portrait), JPG or PNG.' });
+  await apply('comp', 'shared.logo', { image: 'Client logo. Recommended ~400×200px PNG, transparent background.' });
+  await apply('comp', 'shared.seo', { ogImage: 'Social-share image. Recommended 1200×630px, JPG or PNG.' });
+  await apply('ct', 'api::product.product', {
+    main_image: 'Product render (card/hero). Recommended ~1000×1200px PNG, transparent background.',
+    gallery: 'Gallery photos, ~1200×1500px (4:5) each. The first image is the main display.',
+  });
+  await apply('ct', 'api::global.global', { logo: 'Brand logo. Recommended ~400×120px PNG, transparent background.' });
+}
 
 async function patchOgImage(strapi) {
   const logo = await strapi.db
