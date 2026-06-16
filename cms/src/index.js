@@ -94,8 +94,47 @@ module.exports = {
     } catch (e) {
       strapi.log.error('[webhook] ' + (e.stack || e.message));
     }
+
+    // Add recommended-image-size helper text under image fields in the admin.
+    try {
+      await setImageFieldHints(strapi);
+    } catch (e) {
+      strapi.log.error('[labels] ' + (e.stack || e.message));
+    }
   },
 };
+
+async function setImageFieldHints(strapi) {
+  const cm = strapi.plugin('content-manager');
+  const apply = async (kind, key, fields) => {
+    try {
+      const schema = kind === 'ct' ? strapi.contentType(key) : strapi.components[key];
+      if (!schema) { strapi.log.warn('[labels] not found: ' + key); return; }
+      const service = cm.service(kind === 'ct' ? 'content-types' : 'components');
+      const cfg = await service.findConfiguration(schema);
+      cfg.metadatas = cfg.metadatas || {};
+      for (const [field, description] of Object.entries(fields)) {
+        const m = cfg.metadatas[field] || { edit: {}, list: {} };
+        m.edit = { ...(m.edit || {}), description };
+        cfg.metadatas[field] = m;
+      }
+      await service.updateConfiguration(schema, cfg);
+      strapi.log.info('[labels] hints set on ' + key);
+    } catch (e) {
+      strapi.log.error('[labels] ' + key + ': ' + e.message);
+    }
+  };
+
+  await apply('comp', 'sections.hero', { image: 'Product render. Recommended ~1000×1200px PNG with transparent background.' });
+  await apply('comp', 'sections.about-split', { image: 'Photo. Recommended ~1200×1500px (4:5 portrait), JPG or PNG.' });
+  await apply('comp', 'shared.logo', { image: 'Client logo. Recommended ~400×200px PNG, transparent background.' });
+  await apply('comp', 'shared.seo', { ogImage: 'Social-share image. Recommended 1200×630px, JPG or PNG.' });
+  await apply('ct', 'api::product.product', {
+    main_image: 'Product render (card/hero). Recommended ~1000×1200px PNG, transparent background.',
+    gallery: 'Gallery photos, ~1200×1500px (4:5) each. The first image is the main display.',
+  });
+  await apply('ct', 'api::global.global', { logo: 'Brand logo. Recommended ~400×120px PNG, transparent background.' });
+}
 
 async function patchOgImage(strapi) {
   const logo = await strapi.db

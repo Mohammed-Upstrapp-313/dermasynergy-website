@@ -30,12 +30,12 @@ export const query = graphql`
         ... on STRAPI__COMPONENT_SECTIONS_HERO {
           eyebrow heading lede cta_label cta_url
           meta { label value }
-          image { alternativeText localFile { publicURL } }
+          image { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 700, quality: 92, formats: [AUTO, WEBP, AVIF], placeholder: BLURRED) } publicURL } }
         }
         ... on STRAPI__COMPONENT_SECTIONS_TRUST_STRIP { items { icon text } }
         ... on STRAPI__COMPONENT_SECTIONS_ABOUT_SPLIT {
           tint image_side eyebrow heading lede body
-          image { alternativeText localFile { publicURL } }
+          image { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 960, quality: 92, formats: [AUTO, WEBP, AVIF], placeholder: BLURRED) } publicURL } }
         }
         ... on STRAPI__COMPONENT_SECTIONS_FEATURE_ROW { tint eyebrow heading lede items { title text } }
         ... on STRAPI__COMPONENT_SECTIONS_RULE_LIST { tint eyebrow heading lede link_label link_url items { icon title text } }
@@ -44,7 +44,7 @@ export const query = graphql`
         ... on STRAPI__COMPONENT_SECTIONS_PRODUCTS_GRID { tint eyebrow heading lede source }
         ... on STRAPI__COMPONENT_SECTIONS_CLIENTELE {
           tint eyebrow heading lede
-          logos { name image { alternativeText localFile { publicURL } } }
+          logos { name image { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 320, quality: 92, formats: [AUTO, WEBP, AVIF], placeholder: BLURRED) } publicURL } } }
         }
         ... on STRAPI__COMPONENT_SECTIONS_CTA_BAND { eyebrow heading body cta_label cta_url }
         ... on STRAPI__COMPONENT_SECTIONS_MISSION_VISION { tint eyebrow heading lede cards { icon title text } }

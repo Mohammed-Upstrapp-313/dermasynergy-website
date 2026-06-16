@@ -128,8 +128,8 @@ export const query = graphql`
     strapiProduct(slug: { eq: $slug }) {
       name slug kicker subtitle description accent
       seo { metaDescription ogImage { localFile { publicURL } } }
-      main_image { alternativeText localFile { publicURL } }
-      gallery { alternativeText localFile { publicURL } }
+      main_image { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 760, quality: 92, formats: [AUTO, WEBP, AVIF], placeholder: BLURRED) } publicURL } }
+      gallery { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 1100, quality: 92, formats: [AUTO, WEBP, AVIF], placeholder: BLURRED) } publicURL } }
       tags { value }
       specs { label value }
       benefits { icon text }

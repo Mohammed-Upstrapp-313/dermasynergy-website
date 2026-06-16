@@ -155,7 +155,7 @@ const ProductsGrid = (s) => {
       allStrapiProduct(sort: { createdAt: ASC }) {
         nodes {
           name slug kicker short_desc accent is_featured
-          main_image { alternativeText localFile { publicURL } }
+          main_image { alternativeText localFile { childImageSharp { gatsbyImageData(width: 700, quality: 92, formats: [AUTO, WEBP, AVIF], placeholder: BLURRED) } publicURL } }
         }
       }
     }
