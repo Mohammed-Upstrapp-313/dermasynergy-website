@@ -8,16 +8,23 @@ const PageTemplate = ({ data }) => <Layout><Sections sections={data.strapiPage.s
 
 export default PageTemplate;
 
-export const Head = ({ data }) => {
+export const Head = ({ data, location }) => {
   const seo = data.strapiPage.seo || {};
-  return <Seo title={data.strapiPage.title} description={seo.metaDescription} />;
+  return (
+    <Seo
+      title={data.strapiPage.title}
+      description={seo.metaDescription}
+      image={seo.ogImage && seo.ogImage.localFile && seo.ogImage.localFile.publicURL}
+      pathname={location && location.pathname}
+    />
+  );
 };
 
 export const query = graphql`
   query ($slug: String!) {
     strapiPage(slug: { eq: $slug }) {
       title
-      seo { metaDescription }
+      seo { metaDescription ogImage { localFile { publicURL } } }
       sections {
         __typename
         ... on STRAPI__COMPONENT_SECTIONS_HERO {

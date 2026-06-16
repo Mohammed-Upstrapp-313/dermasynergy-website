@@ -111,16 +111,23 @@ const ProductTemplate = ({ data }) => {
 
 export default ProductTemplate;
 
-export const Head = ({ data }) => {
+export const Head = ({ data, location }) => {
   const seo = data.strapiProduct.seo || {};
-  return <Seo title={data.strapiProduct.name} description={seo.metaDescription} />;
+  return (
+    <Seo
+      title={data.strapiProduct.name}
+      description={seo.metaDescription}
+      image={seo.ogImage && seo.ogImage.localFile && seo.ogImage.localFile.publicURL}
+      pathname={location && location.pathname}
+    />
+  );
 };
 
 export const query = graphql`
   query ($slug: String!) {
     strapiProduct(slug: { eq: $slug }) {
       name slug kicker subtitle description accent
-      seo { metaDescription }
+      seo { metaDescription ogImage { localFile { publicURL } } }
       main_image { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 700, placeholder: BLURRED) } publicURL } }
       gallery { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 700, placeholder: BLURRED) } publicURL } }
       tags { value }
