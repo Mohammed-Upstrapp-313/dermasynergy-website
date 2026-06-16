@@ -52,6 +52,25 @@ module.exports = {
     } catch (e) {
       strapi.log.error('[patch] ogImage failed: ' + (e.stack || e.message));
     }
+
+    // Ensure a read-only API token for the Gatsby frontend (logged once on creation).
+    try {
+      const svc = strapi.service('admin::api-token');
+      const existing = await svc.getByName('gatsby');
+      if (!existing) {
+        const t = await svc.create({
+          name: 'gatsby',
+          description: 'Gatsby frontend (gatsby-source-strapi needs content-type-builder introspection)',
+          type: 'full-access',
+          lifespan: null,
+        });
+        strapi.log.info('[token] GATSBY_STRAPI_TOKEN=' + t.accessKey);
+      } else {
+        strapi.log.info('[token] gatsby API token already exists');
+      }
+    } catch (e) {
+      strapi.log.error('[token] ' + (e.stack || e.message));
+    }
   },
 };
 
