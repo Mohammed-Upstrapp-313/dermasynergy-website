@@ -1,9 +1,10 @@
-# Netlify configuration for the DermaSynergy Gatsby site
-# Works for both CLI deploys (`netlify deploy`) and git-connected builds.
+# Netlify configuration for the DermaSynergy monorepo.
+# Installs the whole workspace at the repo root, then builds only the web app
+# (Turborepo handles the task graph + caching). Works for CLI and git-connected builds.
 
 [build]
-  command = "npm run build"
-  publish = "public"
+  command = "npx turbo run build --filter=@dermasynergy/web"
+  publish = "apps/web/public"
 
 [build.environment]
   # Pin a Gatsby-supported LTS Node so Netlify builds match local.

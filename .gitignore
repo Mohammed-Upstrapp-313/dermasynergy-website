@@ -1,7 +1,8 @@
-# Gatsby / Node
+# Dependencies (hoisted to root + any per-workspace)
 node_modules/
-.cache/
-public/
+
+# Turborepo
+.turbo/
 
 # Logs
 *.log

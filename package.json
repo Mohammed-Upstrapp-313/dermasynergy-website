@@ -1,30 +1,28 @@
 {
-  "name": "dermasynergy-website",
+  "name": "dermasynergy-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "DermaSynergy — dermatology skincare B2B website (Gatsby + React)",
+  "description": "DermaSynergy — Turborepo monorepo (Gatsby web frontend + Strapi CMS)",
   "author": "DermaSynergy",
   "license": "UNLICENSED",
+  "packageManager": "npm@11.6.2",
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "develop": "gatsby develop",
-    "start": "gatsby develop",
-    "build": "gatsby build",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "dev": "turbo run develop",
+    "develop": "turbo run develop",
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "web": "npm run develop --workspace=@dermasynergy/web",
+    "web:build": "npm run build --workspace=@dermasynergy/web",
+    "cms": "npm run develop --workspace=@dermasynergy/cms",
+    "cms:build": "npm run build --workspace=@dermasynergy/cms"
   },
-  "dependencies": {
-    "gatsby": "^5.13.7",
-    "gatsby-plugin-image": "^3.16.0",
-    "gatsby-plugin-manifest": "^5.16.0",
-    "gatsby-plugin-sharp": "^5.16.0",
-    "gatsby-plugin-sitemap": "^6.16.0",
-    "gatsby-source-filesystem": "^5.16.0",
-    "gatsby-source-strapi": "^5.0.4",
-    "gatsby-transformer-sharp": "^5.16.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+  "devDependencies": {
+    "turbo": "^2.5.5"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }
