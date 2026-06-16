@@ -88,7 +88,7 @@ const ProductTemplate = ({ data }) => {
               <p className="lede">Every ingredient is chosen for a reason — nothing added just to make the label look impressive.</p>
               <ul className="ing-bullets">{p.ingredients.map((ing) => <li key={ing.value}>{ing.value}</li>)}</ul>
             </div>
-            {p.main_image && <div className="ing-photo reveal"><StrapiImage media={p.main_image} alt={p.name} fill objectFit="cover" /></div>}
+            {(p.gallery && p.gallery[0]) && <div className="ing-photo reveal"><StrapiImage media={p.gallery[0]} alt={p.name} fill objectFit="cover" /></div>}
           </div>
         </section>
       )}
@@ -128,8 +128,8 @@ export const query = graphql`
     strapiProduct(slug: { eq: $slug }) {
       name slug kicker subtitle description accent
       seo { metaDescription ogImage { localFile { publicURL } } }
-      main_image { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 700, placeholder: BLURRED) } publicURL } }
-      gallery { alternativeText localFile { childImageSharp { gatsbyImageData(layout: CONSTRAINED, width: 700, placeholder: BLURRED) } publicURL } }
+      main_image { alternativeText localFile { publicURL } }
+      gallery { alternativeText localFile { publicURL } }
       tags { value }
       specs { label value }
       benefits { icon text }

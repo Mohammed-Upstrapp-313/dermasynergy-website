@@ -71,6 +71,29 @@ module.exports = {
     } catch (e) {
       strapi.log.error('[token] ' + (e.stack || e.message));
     }
+
+    // Auto-refresh the local Gatsby dev server on publish/update (local dev only).
+    try {
+      const refreshUrl = process.env.GATSBY_REFRESH_URL || 'http://localhost:8000/__refresh';
+      const store = strapi.get ? strapi.get('webhookStore') : strapi.webhookStore;
+      if (store && store.findWebhooks) {
+        const hooks = await store.findWebhooks();
+        if (!hooks.find((h) => h.name === 'Gatsby refresh')) {
+          await store.createWebhook({
+            name: 'Gatsby refresh',
+            url: refreshUrl,
+            headers: {},
+            events: ['entry.create', 'entry.update', 'entry.delete', 'entry.publish', 'entry.unpublish'],
+            enabled: true,
+          });
+          strapi.log.info('[webhook] created "Gatsby refresh" -> ' + refreshUrl);
+        } else {
+          strapi.log.info('[webhook] "Gatsby refresh" already exists');
+        }
+      }
+    } catch (e) {
+      strapi.log.error('[webhook] ' + (e.stack || e.message));
+    }
   },
 };
 
