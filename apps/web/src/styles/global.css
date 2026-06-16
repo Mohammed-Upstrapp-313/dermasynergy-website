@@ -148,7 +148,8 @@ p{text-wrap:pretty}
 .hero-stage::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);background-size:38px 38px;opacity:.6}
 .hero-ring{position:absolute;width:340px;height:340px;border-radius:50%;border:1px solid rgba(44,143,120,.25)}
 .hero-ring.r2{width:440px;height:440px;border-color:rgba(44,143,120,.13)}
-.hero-prod{position:absolute;inset:7% 9%;z-index:2;filter:drop-shadow(0 40px 50px rgba(28,49,42,.26))}
+.hero-prod{position:relative;inset:auto;z-index:2;width:100%;max-width:180px;height:auto;margin:auto;filter:drop-shadow(0 30px 44px rgba(28,49,42,.26))}
+.hero-prod img{object-fit:contain}
 .hero-chip{position:absolute;z-index:3;background:#fff;border:1px solid var(--line);border-radius:3px;padding:11px 15px;box-shadow:var(--shadow-sm);font-size:13px}
 .hero-chip .ct{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:2px}
 .hero-chip .cv{font-weight:600;color:var(--ink);font-size:14px}
@@ -171,7 +172,7 @@ p{text-wrap:pretty}
 .hero-panel::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.2) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.2) 1px,transparent 1px);background-size:42px 42px;opacity:.55}
 .hero-panel .hero-ring{border-color:rgba(255,255,255,.45)}
 .hero-panel .hero-ring.r2{border-color:rgba(255,255,255,.26)}
-.hero-panel .hero-prod{inset:6% 9%}
+.hero-panel .hero-prod{inset:auto;max-width:190px}
 .hero-imgcard{position:absolute;left:-30px;bottom:38px;width:178px;height:222px;border-radius:14px;z-index:4;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-md);padding:9px}
 .hero-imgcard image-slot{display:block;width:100%;height:100%;border-radius:9px;overflow:hidden}
 .imgcard-tag{position:absolute;bottom:18px;left:18px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(23,63,55,.78);padding:5px 9px;border-radius:3px;z-index:3}
