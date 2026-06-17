@@ -1,18 +1,33 @@
 import React, { useState } from "react";
 import { Link, useStaticQuery, graphql } from "gatsby";
 
-const Brand = () => (
-  <Link to="/" className="brand" aria-label="DermaSynergy home">
-    <span className="brand-mark"></span>
-    <span className="brand-name">Derma<span className="g">Synergy</span><sup>™</sup></span>
+const Brand = ({ logo, name }) => (
+  <Link to="/" className="brand" aria-label={`${name || "DermaSynergy"} home`}>
+    {logo && logo.localFile && logo.localFile.publicURL ? (
+      <img src={logo.localFile.publicURL} alt={name || "DermaSynergy"} className="brand-logo" style={{ height: "30px", width: "auto", display: "block" }} />
+    ) : (
+      <>
+        <span className="brand-mark"></span>
+        <span className="brand-name">Derma<span className="g">Synergy</span><sup>™</sup></span>
+      </>
+    )}
   </Link>
 );
 
 const Header = () => {
   const { strapiGlobal } = useStaticQuery(graphql`
-    query { strapiGlobal { header_menu { label url } } }
+    query {
+      strapiGlobal {
+        site_name
+        header_cta_label
+        logo { alternativeText localFile { publicURL } }
+        header_menu { label url }
+      }
+    }
   `);
-  const menu = (strapiGlobal && strapiGlobal.header_menu) || [];
+  const g = strapiGlobal || {};
+  const menu = g.header_menu || [];
+  const ctaLabel = g.header_cta_label || "Let's connect";
   const [open, setOpen] = useState(false);
 
   const openStyle = {
@@ -24,12 +39,12 @@ const Header = () => {
   return (
     <header className="nav">
       <div className="wrap nav-inner">
-        <Brand />
+        <Brand logo={g.logo} name={g.site_name} />
         <nav className="nav-links" style={open ? openStyle : undefined}>
           {menu.map((m) => <Link to={m.url} key={m.label}>{m.label}</Link>)}
         </nav>
         <div className="nav-cta">
-          <Link to="/contact/" className="btn btn-primary">Let's connect <span className="ar">→</span></Link>
+          <Link to="/contact/" className="btn btn-primary">{ctaLabel} <span className="ar">→</span></Link>
           <button className="btn btn-ghost nav-toggle" aria-label="Menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}>Menu</button>
         </div>
       </div>

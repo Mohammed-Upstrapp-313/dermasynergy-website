@@ -50,7 +50,9 @@ const strapiConfig = {
   singleTypes: [
     {
       singularName: "global",
-      queryParams: { populate: { logo: true, favicon: true, header_menu: true, footer_menu: true } },
+      // "*" populates all first-level fields (logo, favicon, menus, product_labels) without
+      // 400-ing on a Strapi instance that hasn't been redeployed with product_labels yet.
+      queryParams: { populate: "*" },
     },
   ],
 };

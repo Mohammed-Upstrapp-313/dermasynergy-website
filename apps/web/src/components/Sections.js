@@ -158,6 +158,7 @@ const WhyChoose = (s) => (
 const ProductsGrid = (s) => {
   const data = useStaticQuery(graphql`
     query {
+      strapiGlobal { product_labels { know_more_label } }
       allStrapiProduct(sort: { createdAt: ASC }) {
         nodes {
           name slug kicker short_desc accent is_featured
@@ -166,6 +167,7 @@ const ProductsGrid = (s) => {
       }
     }
   `);
+  const knowMore = (data.strapiGlobal && data.strapiGlobal.product_labels && data.strapiGlobal.product_labels.know_more_label) || "Know More";
   let products = data.allStrapiProduct.nodes;
   if (s.source !== "all") products = products.filter((p) => p.is_featured);
   return (
@@ -186,7 +188,7 @@ const ProductsGrid = (s) => {
                 {p.kicker && <div className="product-kicker">{p.kicker}</div>}
                 <h3 className="h3">{p.name}</h3>
                 {p.short_desc && <p className="pcard-desc">{p.short_desc}</p>}
-                <Link to={`/products/${p.slug}/`} className="btn btn-primary">Know More <Arrow /></Link>
+                <Link to={`/products/${p.slug}/`} className="btn btn-primary">{knowMore} <Arrow /></Link>
               </div>
             </div>
           ))}
