@@ -14,7 +14,7 @@ const path = require("path");
  */
 exports.createSchemaCustomization = ({ actions }) => {
   actions.createTypes(`
-    type STRAPI__COMPONENT_SHARED_PRODUCT_LABELS {
+    type STRAPI__COMPONENT_SHARED_PRODUCT_LABELS @dontInfer {
       breadcrumb_home: String
       breadcrumb_products: String
       enquire_label: String
