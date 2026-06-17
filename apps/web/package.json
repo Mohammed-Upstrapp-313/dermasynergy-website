@@ -6,9 +6,9 @@
   "author": "DermaSynergy",
   "license": "UNLICENSED",
   "scripts": {
-    "develop": "gatsby develop",
-    "start": "gatsby develop",
-    "build": "gatsby build",
+    "develop": "node scripts/fetch-favicon.js && gatsby develop",
+    "start": "node scripts/fetch-favicon.js && gatsby develop",
+    "build": "node scripts/fetch-favicon.js && gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean"
   },
