@@ -22,14 +22,34 @@ const Gallery = ({ images, alt }) => {
   );
 };
 
+// Built-in defaults — used only when the CMS field is empty. {name} → product name.
+const LABEL_DEFAULTS = {
+  breadcrumb_home: "Home",
+  breadcrumb_products: "Products",
+  enquire_label: "Enquire to Stock",
+  benefits_eyebrow: "Key Benefits",
+  benefits_heading: "What {name} does for the skin.",
+  howto_eyebrow: "How to Use",
+  howto_heading: "A simple daily ritual.",
+  ingredients_eyebrow: "Ingredients",
+  ingredients_heading: "Inside the formula.",
+  ingredients_note: "Every ingredient is chosen for a reason — nothing added just to make the label look impressive.",
+  cta_eyebrow: "Become a Partner",
+  cta_heading: "Stock {name} in your practice.",
+  cta_body: "Request product samples and our full catalogue — and get a dedicated point of contact for your clinic or pharmacy.",
+  cta_button: "Contact Us",
+};
+
 const ProductTemplate = ({ data }) => {
   const p = data.strapiProduct;
+  const pl = (data.strapiGlobal && data.strapiGlobal.product_labels) || {};
+  const L = (k) => (pl[k] || LABEL_DEFAULTS[k]).replace("{name}", p.name);
   return (
     <Layout>
       {/* HERO */}
       <section className="pd-hero">
         <div className="wrap">
-          <div className="breadcrumb"><Link to="/">Home</Link> <span>/</span> <Link to="/#products">Products</Link> <span>/</span> {p.name}</div>
+          <div className="breadcrumb"><Link to="/">{L("breadcrumb_home")}</Link> <span>/</span> <Link to="/#products">{L("breadcrumb_products")}</Link> <span>/</span> {p.name}</div>
           <div className="pd-grid">
             <Gallery images={p.gallery} alt={p.name} />
             <div className="pd-info">
@@ -39,7 +59,7 @@ const ProductTemplate = ({ data }) => {
               {p.description && <p className="pd-desc">{p.description}</p>}
               {p.tags && p.tags.length > 0 && <div className="pd-tags">{p.tags.map((t) => <span className="pd-tag" key={t.value}>{t.value}</span>)}</div>}
               {p.specs && p.specs.length > 0 && <div className="pd-specs">{p.specs.map((s) => <div className="sp" key={s.label}><span className="k">{s.label}</span><span className="v">{s.value}</span></div>)}</div>}
-              <div className="pd-actions"><Link to="/contact/" className="btn btn-primary btn-lg">Enquire to Stock <span className="ar">→</span></Link></div>
+              <div className="pd-actions"><Link to="/contact/" className="btn btn-primary btn-lg">{L("enquire_label")} <span className="ar">→</span></Link></div>
             </div>
           </div>
         </div>
@@ -51,8 +71,8 @@ const ProductTemplate = ({ data }) => {
           <div className="wrap">
             <div className="section-head wide cols reveal">
               <div>
-                <span className="eyebrow" style={{ marginBottom: "18px" }}>Key Benefits</span>
-                <h2 className="h2" style={{ maxWidth: "18ch" }}>What {p.name} does for the skin.</h2>
+                <span className="eyebrow" style={{ marginBottom: "18px" }}>{L("benefits_eyebrow")}</span>
+                <h2 className="h2" style={{ maxWidth: "18ch" }}>{L("benefits_heading")}</h2>
               </div>
             </div>
             <div className="benefits-icons reveal">
@@ -67,8 +87,8 @@ const ProductTemplate = ({ data }) => {
         <section className="section-pad">
           <div className="wrap howto-grid">
             <div className="reveal">
-              <span className="eyebrow">How to Use</span>
-              <h2 className="h2" style={{ margin: "18px 0 6px" }}>A simple daily ritual.</h2>
+              <span className="eyebrow">{L("howto_eyebrow")}</span>
+              <h2 className="h2" style={{ margin: "18px 0 6px" }}>{L("howto_heading")}</h2>
               <div className="ht-steps">
                 {p.how_to_use.map((s, i) => <div className="ht-step" key={s.title}><span className="htn">{i + 1}</span><div><h4 className="h4">{s.title}</h4><p>{s.text}</p></div></div>)}
               </div>
@@ -83,9 +103,9 @@ const ProductTemplate = ({ data }) => {
         <section className="section-pad tint">
           <div className="wrap ing-grid">
             <div className="reveal">
-              <span className="eyebrow">Ingredients</span>
-              <h2 className="h2">Inside the formula.</h2>
-              <p className="lede">Every ingredient is chosen for a reason — nothing added just to make the label look impressive.</p>
+              <span className="eyebrow">{L("ingredients_eyebrow")}</span>
+              <h2 className="h2">{L("ingredients_heading")}</h2>
+              <p className="lede">{L("ingredients_note")}</p>
               <ul className="ing-bullets">{p.ingredients.map((ing) => <li key={ing.value}>{ing.value}</li>)}</ul>
             </div>
             {(p.gallery && p.gallery[0]) && <div className="ing-photo reveal"><StrapiImage media={p.gallery[0]} alt={p.name} fill objectFit="cover" /></div>}
@@ -98,11 +118,11 @@ const ProductTemplate = ({ data }) => {
         <span className="grad-edge"></span>
         <div className="wrap cta-inner">
           <div className="reveal">
-            <span className="eyebrow">Become a Partner</span>
-            <h2 className="h2" style={{ marginTop: "18px" }}>Stock {p.name} in your practice.</h2>
-            <p>Request product samples and our full catalogue — and get a dedicated point of contact for your clinic or pharmacy.</p>
+            <span className="eyebrow">{L("cta_eyebrow")}</span>
+            <h2 className="h2" style={{ marginTop: "18px" }}>{L("cta_heading")}</h2>
+            <p>{L("cta_body")}</p>
           </div>
-          <div className="cta-actions reveal"><Link to="/contact/" className="btn btn-primary">Contact Us <span className="ar">→</span></Link></div>
+          <div className="cta-actions reveal"><Link to="/contact/" className="btn btn-primary">{L("cta_button")} <span className="ar">→</span></Link></div>
         </div>
       </section>
     </Layout>
@@ -135,6 +155,14 @@ export const query = graphql`
       benefits { icon text }
       how_to_use { title text }
       ingredients { value }
+    }
+    strapiGlobal {
+      product_labels {
+        breadcrumb_home breadcrumb_products enquire_label
+        benefits_eyebrow benefits_heading howto_eyebrow howto_heading
+        ingredients_eyebrow ingredients_heading ingredients_note
+        cta_eyebrow cta_heading cta_body cta_button
+      }
     }
   }
 `;

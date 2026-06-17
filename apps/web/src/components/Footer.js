@@ -12,6 +12,8 @@ const Footer = () => {
   const { strapiGlobal } = useStaticQuery(graphql`
     query {
       strapiGlobal {
+        site_name copyright
+        logo { alternativeText localFile { publicURL } }
         footer_about contact_email contact_phone contact_office
         social_instagram social_linkedin social_facebook social_youtube
         footer_menu { label url }
@@ -20,13 +22,21 @@ const Footer = () => {
   `);
   const g = strapiGlobal || {};
   const menu = g.footer_menu || [];
+  const year = new Date().getFullYear();
+  const copyright = (g.copyright || "© {year} DermaSynergy™ · All rights reserved").replace("{year}", year);
 
   return (
     <footer className="footer">
       <div className="wrap">
         <div className="footer-top">
           <div>
-            <Link to="/" className="brand"><span className="brand-mark"></span><span className="brand-name">Derma<span className="g">Synergy</span><sup>™</sup></span></Link>
+            <Link to="/" className="brand" aria-label={`${g.site_name || "DermaSynergy"} home`}>
+              {g.logo && g.logo.localFile && g.logo.localFile.publicURL ? (
+                <img src={g.logo.localFile.publicURL} alt={g.site_name || "DermaSynergy"} className="brand-logo" style={{ height: "30px", width: "auto", display: "block" }} />
+              ) : (
+                <><span className="brand-mark"></span><span className="brand-name">Derma<span className="g">Synergy</span><sup>™</sup></span></>
+              )}
+            </Link>
             {g.footer_about && <p className="footer-about">{g.footer_about}</p>}
             <div className="socials">
               {SOCIALS.filter((s) => g[s.key]).map((s) => (
@@ -48,7 +58,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          <span className="legal">© 2026 DermaSynergy™ · All rights reserved</span>
+          <span className="legal">{copyright}</span>
         </div>
       </div>
     </footer>

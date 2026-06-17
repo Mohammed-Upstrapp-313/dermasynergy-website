@@ -9,11 +9,12 @@ const Seo = ({ title, description, image, keywords, pathname }) => {
   const { site, strapiGlobal } = useStaticQuery(graphql`
     query {
       site { siteMetadata { title description siteUrl } }
-      strapiGlobal { favicon { localFile { publicURL } } }
+      strapiGlobal { site_name favicon { localFile { publicURL } } }
     }
   `);
 
-  const { title: siteName, description: defaultDesc, siteUrl } = site.siteMetadata;
+  const { description: defaultDesc, siteUrl } = site.siteMetadata;
+  const siteName = (strapiGlobal && strapiGlobal.site_name) || site.siteMetadata.title;
   const fullTitle = title ? `${title} — ${siteName}` : siteName;
   const desc = description || defaultDesc;
   const canonical = `${siteUrl}${pathname || "/"}`;

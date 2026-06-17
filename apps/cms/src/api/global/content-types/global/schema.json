@@ -35,6 +35,14 @@
     "footer_about": {
       "type": "text"
     },
+    "header_cta_label": {
+      "type": "string",
+      "default": "Let's connect"
+    },
+    "copyright": {
+      "type": "string",
+      "default": "© {year} DermaSynergy™ · All rights reserved"
+    },
     "contact_email": {
       "type": "string"
     },
@@ -65,6 +73,11 @@
       "type": "component",
       "repeatable": true,
       "component": "shared.menu-item"
+    },
+    "product_labels": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.product-labels"
     }
   }
 }

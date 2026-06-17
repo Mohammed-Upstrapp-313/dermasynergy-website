@@ -1,0 +1,71 @@
+{
+  "collectionName": "components_shared_product_labels",
+  "info": {
+    "displayName": "Product Page Labels",
+    "icon": "bulletList",
+    "description": "Shared headings/labels for every product detail page. Use {name} where the product name should appear."
+  },
+  "options": {},
+  "attributes": {
+    "breadcrumb_home": {
+      "type": "string",
+      "default": "Home"
+    },
+    "breadcrumb_products": {
+      "type": "string",
+      "default": "Products"
+    },
+    "enquire_label": {
+      "type": "string",
+      "default": "Enquire to Stock"
+    },
+    "benefits_eyebrow": {
+      "type": "string",
+      "default": "Key Benefits"
+    },
+    "benefits_heading": {
+      "type": "string",
+      "default": "What {name} does for the skin."
+    },
+    "howto_eyebrow": {
+      "type": "string",
+      "default": "How to Use"
+    },
+    "howto_heading": {
+      "type": "string",
+      "default": "A simple daily ritual."
+    },
+    "ingredients_eyebrow": {
+      "type": "string",
+      "default": "Ingredients"
+    },
+    "ingredients_heading": {
+      "type": "string",
+      "default": "Inside the formula."
+    },
+    "ingredients_note": {
+      "type": "text",
+      "default": "Every ingredient is chosen for a reason — nothing added just to make the label look impressive."
+    },
+    "cta_eyebrow": {
+      "type": "string",
+      "default": "Become a Partner"
+    },
+    "cta_heading": {
+      "type": "string",
+      "default": "Stock {name} in your practice."
+    },
+    "cta_body": {
+      "type": "text",
+      "default": "Request product samples and our full catalogue — and get a dedicated point of contact for your clinic or pharmacy."
+    },
+    "cta_button": {
+      "type": "string",
+      "default": "Contact Us"
+    },
+    "know_more_label": {
+      "type": "string",
+      "default": "Know More"
+    }
+  }
+}
