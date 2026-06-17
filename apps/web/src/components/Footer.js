@@ -49,7 +49,6 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <span className="legal">© 2026 DermaSynergy™ · All rights reserved</span>
-          <div className="fl"><Link to="/privacy/">Privacy</Link><Link to="/terms/">Terms</Link></div>
         </div>
       </div>
     </footer>
