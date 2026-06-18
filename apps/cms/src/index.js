@@ -51,6 +51,11 @@ module.exports = {
         strapi.log.error('[seed] failed: ' + (e.stack || e.message));
       }
       try {
+        await require('./seed').ensureCatalog(strapi);
+      } catch (e) {
+        strapi.log.error('[catalog] failed: ' + (e.stack || e.message));
+      }
+      try {
         await patchOgImage(strapi);
       } catch (e) {
         strapi.log.error('[patch] ogImage failed: ' + (e.stack || e.message));

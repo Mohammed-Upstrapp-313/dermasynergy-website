@@ -339,4 +339,132 @@ async function seed(strapi) {
   strapi.log.info('[seed] ✓ Pages — seeding complete.');
 }
 
+/**
+ * Idempotent catalog top-up — runs on EVERY boot, after seed().
+ *
+ * Adds the two extra demo products and the "Our Products" listing page, and
+ * upgrades the header/footer menus to a single "Our Products" entry. Safe on
+ * already-seeded databases (local + production): it only creates what's missing
+ * and only rewrites the menus once, so it never duplicates content or clobbers
+ * manual edits made in the admin.
+ */
+async function ensureCatalog(strapi) {
+  const createDoc = async (uid, data, publish) => {
+    const doc = await strapi.documents(uid).create({ data });
+    if (publish) await strapi.documents(uid).publish({ documentId: doc.documentId });
+    return doc;
+  };
+  const fileId = async (namePart) => {
+    const f = await strapi.db.query('plugin::upload.file').findMany({ where: { name: { $contains: namePart } }, limit: 1 });
+    return f[0] ? f[0].id : null;
+  };
+  const productExists = async (slug) => (await strapi.db.query('api::product.product').count({ where: { slug } })) > 0;
+  const stripIds = (arr) => (arr || []).map(({ id, ...rest }) => rest);
+
+  // 1) Two extra products — cloned from the originals, NOT featured (so they
+  //    show on the Our Products page but not the homepage "featured" grid).
+  const cloneProduct = async (srcSlug, overrides) => {
+    if (await productExists(overrides.slug)) return;
+    const src = await strapi.db.query('api::product.product').findOne({
+      where: { slug: srcSlug },
+      populate: { main_image: true, gallery: true, tags: true, specs: true, benefits: true, how_to_use: true, ingredients: true, seo: true },
+    });
+    if (!src) { strapi.log.warn(`[catalog] source product not found: ${srcSlug}`); return; }
+    await createDoc('api::product.product', {
+      name: overrides.name, slug: overrides.slug, kicker: overrides.kicker || src.kicker,
+      subtitle: src.subtitle, short_desc: src.short_desc, description: src.description,
+      main_image: src.main_image ? src.main_image.id : null,
+      gallery: (src.gallery || []).map((g) => g.id),
+      accent: src.accent, is_featured: false,
+      tags: stripIds(src.tags), specs: stripIds(src.specs), benefits: stripIds(src.benefits),
+      how_to_use: stripIds(src.how_to_use), ingredients: stripIds(src.ingredients),
+      seo: src.seo ? { metaDescription: src.seo.metaDescription } : undefined,
+    }, true);
+    strapi.log.info(`[catalog] + product ${overrides.slug}`);
+  };
+  await cloneProduct('rebalanse', { name: 'Rebalanse™ Pro', slug: 'rebalanse-pro', kicker: 'Exfoliating Cleanser · 200 ml' });
+  await cloneProduct('revivon', { name: 'Revivon™ Plus', slug: 'revivon-plus', kicker: 'Copper Peptide Serum · 50 ml' });
+
+  // 2) "Our Products" listing page (slug 'products' -> /products/). First section
+  //    is the full products grid (source: all -> 4 products), then the same
+  //    supporting sections as the About page.
+  const pageCount = await strapi.db.query('api::page.page').count({ where: { slug: 'products' } });
+  if (pageCount === 0) {
+    const logos = [
+      { image: await fileId('client-sn-hospital'), name: 'SN Hospital' },
+      { image: await fileId('client-dr-netis'), name: "Dr. Neti's Skin Hair & Nail Clinic" },
+      { image: await fileId('client-eeshritha'), name: 'Eeshritha Skin & Hair Institute' },
+      { image: await fileId('client-tripura'), name: 'Tripura Skin and Cosmetology Clinic' },
+    ];
+    await createDoc('api::page.page', {
+      title: 'Our Products', slug: 'products', template: 'default', is_homepage: false,
+      seo: { metaDescription: 'Explore the DermaSynergy range — dermatologist-considered cleansers and serums formulated for clinics and everyday professional use.' },
+      sections: [
+        {
+          __component: 'sections.products-grid', tint: false, source: 'all',
+          eyebrow: 'Our Products', heading: 'A focused range, formulated with intent.',
+          lede: 'Dermatologist-considered cleansers and serums built for everyday use — each one purposeful, gentle, and kind to the skin barrier.',
+        },
+        {
+          __component: 'sections.mission-vision', tint: true, eyebrow: 'What Drives Us',
+          heading: 'The thinking behind every formulation.',
+          lede: 'Two simple commitments guide how we develop, manufacture, and supply skincare for dermatology practices.',
+          cards: [
+            { icon: 'target', title: 'Our Mission', text: 'To make dependable, dermatologist-considered skincare the easy choice for clinics — formulations that genuinely perform, supplied consistently and without compromise.' },
+            { icon: 'eye', title: 'Our Vision', text: 'A future where every skin practice can offer effective, barrier-friendly skincare they are proud to put their name to — backed by a partner they can rely on.' },
+          ],
+        },
+        {
+          __component: 'sections.why-choose', tint: false, eyebrow: 'Why Choose DermaSynergy', heading: 'Ten reasons clinics partner with us.',
+          lede: 'Everything a dermatology practice needs from a skincare supplier — from the formulation bench to the loading dock.',
+          items: [
+            { icon: 'shield-check', title: 'Dermatologist-focused formulations' },
+            { icon: 'flask', title: 'Carefully selected ingredients' },
+            { icon: 'check-circle', title: 'Quality-controlled manufacturing' },
+            { icon: 'rows', title: 'Consistent batch-to-batch quality' },
+            { icon: 'cube', title: 'Competitive pricing' },
+            { icon: 'truck', title: 'Reliable product availability' },
+            { icon: 'clock', title: 'On-time delivery' },
+            { icon: 'people', title: 'Dedicated partner support' },
+            { icon: 'chart', title: 'Growing portfolio of solutions' },
+            { icon: 'building', title: 'Built for dermatology practice needs' },
+          ],
+        },
+        {
+          __component: 'sections.clientele', tint: true, eyebrow: 'Our Clientele', heading: 'Trusted by skin & hair specialists.',
+          lede: 'Dermatology clinics, skin & hair institutes, and hospitals choose DermaSynergy formulations for their patients — and keep coming back.',
+          logos,
+        },
+      ],
+    }, true);
+    strapi.log.info('[catalog] + page /products/');
+  }
+
+  // 3) Upgrade menus to a single "Our Products" entry — only if not already done
+  //    (preserves manual menu edits made in the admin).
+  const g = await strapi.documents('api::global.global').findFirst();
+  if (g) {
+    const hm = g.header_menu || [];
+    const hasProducts = hm.some((m) => (m.url || '') === '/products/');
+    if (!hasProducts) {
+      await strapi.documents('api::global.global').update({
+        documentId: g.documentId,
+        data: {
+          header_menu: [
+            { label: 'About', url: '/about/' },
+            { label: 'Our Products', url: '/products/' },
+          ],
+          footer_menu: [
+            { label: 'About', url: '/about/' },
+            { label: 'Our Products', url: '/products/' },
+            { label: 'Contact Us', url: '/contact/' },
+          ],
+        },
+      });
+      strapi.log.info('[catalog] menus upgraded -> Our Products');
+    }
+  }
+}
+
 module.exports = seed;
+module.exports.ensureCatalog = ensureCatalog;
