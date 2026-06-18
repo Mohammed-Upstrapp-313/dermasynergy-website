@@ -15,7 +15,7 @@ const Brand = ({ logo, name }) => (
 );
 
 const Header = () => {
-  const { strapiGlobal } = useStaticQuery(graphql`
+  const { strapiGlobal, allStrapiProduct } = useStaticQuery(graphql`
     query {
       strapiGlobal {
         site_name
@@ -23,10 +23,12 @@ const Header = () => {
         logo { alternativeText localFile { publicURL } }
         header_menu { label url }
       }
+      allStrapiProduct(sort: { createdAt: ASC }) { nodes { name slug } }
     }
   `);
   const g = strapiGlobal || {};
   const menu = g.header_menu || [];
+  const products = (allStrapiProduct && allStrapiProduct.nodes) || [];
   const ctaLabel = g.header_cta_label || "Let's connect";
   const [open, setOpen] = useState(false);
 
@@ -41,7 +43,22 @@ const Header = () => {
       <div className="wrap nav-inner">
         <Brand logo={g.logo} name={g.site_name} />
         <nav className="nav-links" style={open ? openStyle : undefined}>
-          {menu.map((m) => <Link to={m.url} key={m.label}>{m.label}</Link>)}
+          {menu.map((m) => {
+            const isProducts = (m.url || "").replace(/\/+$/, "") === "/products";
+            if (isProducts && products.length) {
+              return (
+                <div className="has-sub" key={m.label}>
+                  <Link to={m.url}>{m.label}<svg className="caret" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></Link>
+                  <div className="submenu">
+                    {products.map((p) => (
+                      <Link to={`/products/${p.slug}/`} key={p.slug}>{p.name}</Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+            return <Link to={m.url} key={m.label}>{m.label}</Link>;
+          })}
         </nav>
         <div className="nav-cta">
           <Link to="/contact/" className="btn btn-primary">{ctaLabel} <span className="ar">→</span></Link>

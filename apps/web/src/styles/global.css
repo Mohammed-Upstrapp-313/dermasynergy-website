@@ -126,6 +126,17 @@ p{text-wrap:pretty}
 .nav-links a:hover{color:var(--teal-deep)}
 .nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1.5px;background:var(--teal);transition:width .22s}
 .nav-links a:hover::after{width:100%}
+/* products dropdown */
+.nav-links .has-sub{position:relative}
+.nav-links .has-sub>a{display:inline-flex;align-items:center;gap:5px}
+.nav-links .has-sub .caret{display:inline-block;color:var(--ink-faint);transition:transform .2s,color .2s;margin-top:1px}
+.nav-links .has-sub:hover .caret{transform:rotate(180deg);color:var(--teal-deep)}
+.nav-links .submenu{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(6px);min-width:236px;background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow-md);padding:8px;display:flex;flex-direction:column;gap:2px;opacity:0;visibility:hidden;transition:opacity .18s ease,transform .18s ease;z-index:70}
+.nav-links .submenu::before{content:"";position:absolute;top:-12px;left:0;right:0;height:12px}
+.nav-links .has-sub:hover .submenu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.nav-links .submenu a{padding:10px 13px;border-radius:6px;font-size:14px;font-weight:500;color:var(--ink-2);white-space:nowrap}
+.nav-links .submenu a::after{display:none}
+.nav-links .submenu a:hover{background:var(--paper-2);color:var(--teal-deep)}
 .nav-cta{display:flex;align-items:center;gap:14px}
 .nav-toggle{display:none}
 
@@ -481,6 +492,10 @@ p{text-wrap:pretty}
 @media (max-width:920px){
   .nav-links{display:none}
   .nav-toggle{display:flex}
+  .nav-links .has-sub{display:flex;flex-direction:column;align-items:flex-start;width:100%}
+  .nav-links .has-sub .caret{display:none}
+  .nav-links .submenu{position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;border:none;border-radius:0;padding:2px 0 8px 14px;min-width:0;gap:0}
+  .nav-links .submenu::before{display:none}
   .hero-grid,.split,.split.narrow-r,.split.narrow-l,.product-grid,.product.alt .product-grid,.cta-inner,.footer-top{grid-template-columns:1fr}
   .product.alt .product-stage-wrap{order:0}
   .feature-row{grid-template-columns:1fr}
